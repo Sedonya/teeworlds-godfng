@@ -305,7 +305,7 @@ int CGameControllerFNG2::OnCharacterDeath(class CCharacter *pVictim, class CPlay
 			m_aTeamscore[pKiller->GetTeam()] += m_Config.m_SvTeamScoreSpikeGold;
 			pVictim->GetPlayer()->m_RespawnTick = Server()->Tick()+Server()->TickSpeed()*.5f;
 			if(pKiller->GetCharacter()) GameServer()->MakeLaserTextPoints(pKiller->GetCharacter()->m_Pos, pKiller->GetCID(), m_Config.m_SvPlayerScoreSpikeGold);
-		} else if(Weapon == WEAPON_SPIKE_GREEN){
+		/* UNUSED } else if(Weapon == WEAPON_SPIKE_GREEN){
 			pKiller->m_Stats.m_GrabsTeam++;
 			pVictim->GetPlayer()->m_Stats.m_Deaths++;
 			m_aTeamscore[pKiller->GetTeam()] += m_Config.m_SvTeamScoreSpikeGreen;
@@ -317,7 +317,7 @@ int CGameControllerFNG2::OnCharacterDeath(class CCharacter *pVictim, class CPlay
 			m_aTeamscore[pKiller->GetTeam()] += m_Config.m_SvTeamScoreSpikePurple;
 			pVictim->GetPlayer()->m_RespawnTick = Server()->Tick()+Server()->TickSpeed()*.5f;
 			if(pKiller->GetCharacter()) GameServer()->MakeLaserTextPoints(pKiller->GetCharacter()->m_Pos, pKiller->GetCID(), m_Config.m_SvPlayerScoreSpikePurple);
-
+			UNUSED */
 		} else if(Weapon == WEAPON_HAMMER){ //only called if team mate unfroze you
 			pKiller->m_Stats.m_Unfreezes++;
 		}

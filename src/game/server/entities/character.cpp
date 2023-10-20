@@ -621,7 +621,7 @@ void CCharacter::Tick()
 
 			// handle player <-> player collision
 			float Distance = distance(m_Pos, pCharCore->m_Pos);
-			vec2 Dir = normalize(m_Pos - pCharCore->m_Pos);
+			// vec2 Dir = normalize(m_Pos - pCharCore->m_Pos);
 			if(Distance < 28.0f*1.25f && Distance > 0.0f)
 			{
 				//GameServer()->SendChatTarget(-1, "test");
@@ -1244,68 +1244,77 @@ int CCharacter::NetworkClipped(int SnappingClient, float& Distance, vec2 CheckPo
 void CCharacter::AddSpree()
 {
 	m_Spree++;
-	const int NumMsg = 6;
+	const int NumMsg = 9;
 	char aBuf[128];
 
 	if(m_Spree % g_Config.m_SvKillingSpreeKills == 0)
 	{
-		static const char aaSpreeMsg[NumMsg][32] = {
-			"is on a killing spree",
-			"is on a rampage",
-			"is dominating",
-			"is unstoppable",
-			"is the tee to kill",
-			"is godlike"
+		static const char aaSpreeMsg[NumMsg][128] = {
+			"",
+			"",
+			"в ярости",
+			"доминирует",
+			"неудержим",
+			"это машина для убийств",
+			"богоподобен",
+			"готов выебать весь сервер",
+			"Бог."
 		};
 
 		int bigman = min(m_Spree / g_Config.m_SvKillingSpreeKills, NumMsg) - 1;
 
-		str_format(aBuf, sizeof(aBuf), "%s %s with %d kills!", Server()->ClientName(m_pPlayer->GetCID()), aaSpreeMsg[bigman], m_Spree);
-		GameServer()->SendChat(-1, CGameContext::CHAT_ALL, aBuf);
+		if(m_Spree >= 3 && m_Spree <= 4)
+			str_format(aBuf, sizeof(aBuf), "%s %s (%d убийства)", Server()->ClientName(m_pPlayer->GetCID()), aaSpreeMsg[bigman], m_Spree);
+		else if(m_Spree >= 5)
+			str_format(aBuf, sizeof(aBuf), "%s %s (%d убийств)", Server()->ClientName(m_pPlayer->GetCID()), aaSpreeMsg[bigman], m_Spree);
+		else
+			str_format(aBuf, sizeof(aBuf), "Произошла очень хуёвая ошибка. Пожалуйста, сообщите администрации.");
+		if(m_Spree >= 3 && m_Spree <= 9)
+			GameServer()->SendChat(-1, CGameContext::CHAT_ALL, aBuf);
 
 		if(!m_HammerFreeze && m_Spree == g_Config.m_SvKillingSpreeKills * 1) {
 			m_HammerFreeze = true;
-			GameServer()->SendBroadcast("you got the killingspree award [IceHammer]", m_pPlayer->GetCID());
+			GameServer()->SendBroadcast("(1/9) Вы получили [Замораживающий молот]", m_pPlayer->GetCID());
 		}
 
 		else if(!m_HammerForce && m_Spree == g_Config.m_SvKillingSpreeKills * 2) {
 			m_HammerForce = true;
-			GameServer()->SendBroadcast("you got the killingspree award [BigHammer]", m_pPlayer->GetCID());
+			GameServer()->SendBroadcast("(2/9) Вы получили [Сильный молот]", m_pPlayer->GetCID());
 		}
 
 		else if(!m_GrenadeLauncher && m_Spree == g_Config.m_SvKillingSpreeKills * 3) {
 			m_GrenadeLauncher = true;
-			GameServer()->SendBroadcast("you got the killingspree award [Grenade]", m_pPlayer->GetCID());
+			GameServer()->SendBroadcast("(3/9) Вы получили [Гранатомёт]", m_pPlayer->GetCID());
 		}
 
 		else if(!m_JetPack && m_Spree == g_Config.m_SvKillingSpreeKills * 4) {
 			m_JetPack = true;
-			GameServer()->SendBroadcast("you got the killingspree award [JetPack]", m_pPlayer->GetCID());
+			GameServer()->SendBroadcast("(4/9) Вы получили [Джетпак]", m_pPlayer->GetCID());
 		}
 
 		else if(!m_SpeedRunner && m_Spree == g_Config.m_SvKillingSpreeKills * 5) {
 			m_SpeedRunner = true;
-			GameServer()->SendBroadcast("you got the killingspree award [MaxSpeed]", m_pPlayer->GetCID());
+			GameServer()->SendBroadcast("(5/9) Вы получили [Максимальная скорость]", m_pPlayer->GetCID());
 		}
 
 		else if(!m_RifleSpread && m_Spree == g_Config.m_SvKillingSpreeKills * 6) {
 			m_RifleSpread = true;
-			GameServer()->SendBroadcast("you got the killingspree award [Laser2x]", m_pPlayer->GetCID());
+			GameServer()->SendBroadcast("(6/9) Вы получили [Двойной лазер]", m_pPlayer->GetCID());
 		}
 
 		else if(!m_Core.m_Fat && m_Spree == g_Config.m_SvKillingSpreeKills * 7) {
 			m_Core.m_Fat = true;
-			GameServer()->SendBroadcast("you got the killingspree award [Fat]", m_pPlayer->GetCID());
+			GameServer()->SendBroadcast("(7/9) Вы получили [Fat]", m_pPlayer->GetCID());
 		}
 
 		else if(!m_TeamProtect && m_Spree == g_Config.m_SvKillingSpreeKills * 8) {
 			m_TeamProtect = true;
-			GameServer()->SendBroadcast("you got the last killingspree award [TeamProtection]", m_pPlayer->GetCID());
+			GameServer()->SendBroadcast("(8/9) Вы получили [Защиту команды]", m_pPlayer->GetCID());
 		}
 
 		else if(!m_Invisible && m_Spree == g_Config.m_SvKillingSpreeKills * 9) {
 			m_Invisible = true;
-			GameServer()->SendBroadcast("you got the killingspree award [Invisibility]", m_pPlayer->GetCID());
+			GameServer()->SendBroadcast("(9/9) Вы получили [Невидимость]", m_pPlayer->GetCID());
 		}
 	}
 }
@@ -1323,13 +1332,13 @@ void CCharacter::EndSpree(int Killer)
 		if(g_Config.m_SvKillingSpreePrint && g_Config.m_SvKillingSpreeKills > 0) {
 			char aBuf[128];
 			if(Killer != m_pPlayer->GetCID()) {
-				str_format(aBuf, sizeof(aBuf), "%s %d-kills killing spree was ended by %s", Server()->ClientName(m_pPlayer->GetCID()), m_Spree, Server()->ClientName(Killer));
+				str_format(aBuf, sizeof(aBuf), "Серия %d-убийств %s, была прекращена из-за %s.", m_Spree, Server()->ClientName(m_pPlayer->GetCID()), Server()->ClientName(Killer));
 				GameServer()->SendChat(-1, CGameContext::CHAT_ALL, aBuf);
-				GameServer()->SendBroadcast("You lost all of your items", m_pPlayer->GetCID());
+				GameServer()->SendBroadcast("Вы потеряли все улучшения", m_pPlayer->GetCID());
 			} else {
-				str_format(aBuf, sizeof(aBuf), "%s %d-kills killing spree was ended.", Server()->ClientName(m_pPlayer->GetCID()), m_Spree);
+				str_format(aBuf, sizeof(aBuf), "%s случайно сдох и проебал все плюшки.", Server()->ClientName(m_pPlayer->GetCID(), m_Spree));
 				GameServer()->SendChat(-1, CGameContext::CHAT_ALL, aBuf);
-				GameServer()->SendBroadcast("You lost all of your items", m_pPlayer->GetCID());
+				GameServer()->SendBroadcast("Вы потеряли все улучшения", m_pPlayer->GetCID());
 			}
 		}
 	}

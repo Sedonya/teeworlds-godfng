@@ -226,9 +226,9 @@ const char *IGameController::GetTeamName(int Team)
 	if(IsTeamplay())
 	{
 		if(Team == TEAM_RED)
-			return "red team";
+			return "красных";
 		else if(Team == TEAM_BLUE)
-			return "blue team";
+			return "синих";
 	}
 	else
 	{
@@ -236,7 +236,7 @@ const char *IGameController::GetTeamName(int Team)
 			return "game";
 	}
 
-	return "spectators";
+	return "наблюдателей";
 }
 
 static bool IsSeparator(char c) { return c == ';' || c == ' ' || c == ',' || c == '\t'; }
