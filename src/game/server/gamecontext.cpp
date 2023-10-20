@@ -659,7 +659,7 @@ void CGameContext::OnClientEnter(int ClientID)
 	m_apPlayers[ClientID]->Respawn();
 	if(!m_Config->m_SvTournamentMode || m_pController->IsGameOver()) {
 		char aBuf[512];
-		str_format(aBuf, sizeof(aBuf), "'%s' entered and joined the %s", Server()->ClientName(ClientID), m_pController->GetTeamName(m_apPlayers[ClientID]->GetTeam()));
+		str_format(aBuf, sizeof(aBuf), "[+] '%s' зашёл за %s", Server()->ClientName(ClientID), m_pController->GetTeamName(m_apPlayers[ClientID]->GetTeam()));
 		SendChat(-1, CGameContext::CHAT_ALL, aBuf);
 
 		str_format(aBuf, sizeof(aBuf), "team_join player='%d:%s' team=%d", ClientID, Server()->ClientName(ClientID), m_apPlayers[ClientID]->GetTeam());
@@ -2181,39 +2181,39 @@ void CGameContext::SendRoundStats() {
 	for (int i = 0; i < MAX_CLIENTS; ++i) {
 		CPlayer* p = m_apPlayers[i];
 		if (!p || p->GetTeam() == TEAM_SPECTATORS) continue;
-		SendChatTarget(i, "╔═════════ Statistics ═════════");
+		SendChatTarget(i, "╔═════════ Статистика ═════════");
 		SendChatTarget(i, "║");
 
-		str_format(buff, 300, "║Kills(weapon): %d", p->m_Stats.m_Kills);
+		str_format(buff, 300, "║Убийств(оружием): %d", p->m_Stats.m_Kills);
 		SendChatTarget(i, buff);
-		str_format(buff, 300, "║Hits(By opponent's weapon): %d", p->m_Stats.m_Hits);
+		str_format(buff, 300, "║Ударов(По опоненту): %d", p->m_Stats.m_Hits);
 		SendChatTarget(i, buff);
 		SendChatTarget(i, "║");
-		str_format(buff, 300, "║Kills/Deaths: %4.2f", (p->m_Stats.m_Hits != 0) ? (float)((float)p->m_Stats.m_Kills / (float)p->m_Stats.m_Hits) : (float)p->m_Stats.m_Kills);
+		str_format(buff, 300, "║Убийств/Смертей: %4.2f", (p->m_Stats.m_Hits != 0) ? (float)((float)p->m_Stats.m_Kills / (float)p->m_Stats.m_Hits) : (float)p->m_Stats.m_Kills);
 		SendChatTarget(i, buff);		
-		str_format(buff, 300, "║Shots | Kills/Shots: %d | %3.1f%%\n", p->m_Stats.m_Shots, ((float)p->m_Stats.m_Kills / (float)(p->m_Stats.m_Shots == 0 ? 1: p->m_Stats.m_Shots)) * 100.f);
+		str_format(buff, 300, "║Выстрелов | Убийств/Выстрелов: %d | %3.1f%%\n", p->m_Stats.m_Shots, ((float)p->m_Stats.m_Kills / (float)(p->m_Stats.m_Shots == 0 ? 1: p->m_Stats.m_Shots)) * 100.f);
 		SendChatTarget(i, buff);
 		SendChatTarget(i, "║");
-		SendChatTarget(i, "╠═════════ Spike Kills ════════");
+		SendChatTarget(i, "╠═════════ Убийств в шипы ════════");
 		SendChatTarget(i, "║");
-		str_format(buff, 300, "║Normal: %d", p->m_Stats.m_GrabsNormal);
+		str_format(buff, 300, "║Обычные: %d", p->m_Stats.m_GrabsNormal);
 		SendChatTarget(i, buff);
-		str_format(buff, 300, "║Team: %d", p->m_Stats.m_GrabsTeam);
+		str_format(buff, 300, "║Командные: %d", p->m_Stats.m_GrabsTeam);
 		SendChatTarget(i, buff);
-		str_format(buff, 300, "║Gold/Green/Purple: %d/%d/%d", p->m_Stats.m_GrabsGold, p->m_Stats.m_GrabsGreen, p->m_Stats.m_GrabsPurple);
+		str_format(buff, 300, "║Золотые/Зелёные/Фиолетовые: %d/%d/%d", p->m_Stats.m_GrabsGold, p->m_Stats.m_GrabsGreen, p->m_Stats.m_GrabsPurple);
 		SendChatTarget(i, buff);
 		str_format(buff, 300, "║False: %d", p->m_Stats.m_GrabsFalse);
 		SendChatTarget(i, buff);
-		str_format(buff, 300, "║Deaths(while frozen): %d", p->m_Stats.m_Deaths);
+		str_format(buff, 300, "║Смертей(при заморозке): %d", p->m_Stats.m_Deaths);
 		SendChatTarget(i, buff);
 		SendChatTarget(i, "║");
-		SendChatTarget(i, "╠═══════════ Misc ══════════");
+		SendChatTarget(i, "╠═══════════ Прочее ══════════");
 		SendChatTarget(i, "║");
-		str_format(buff, 300, "║Teammates hammered/unfrozen: %d / %d", p->m_Stats.m_UnfreezingHammerHits, p->m_Stats.m_Unfreezes);
+		str_format(buff, 300, "║Размороженных тиммейтов: %d / %d", p->m_Stats.m_UnfreezingHammerHits, p->m_Stats.m_Unfreezes);
 		SendChatTarget(i, buff);
 		SendChatTarget(i, "║");
 		SendChatTarget(i, "╚══════════════════════════");
-		SendChatTarget(i, "Press F1 to view stats now!!");
+		SendChatTarget(i, "Нажмите F1, чтобы просмотреть статистику!!");
 
 		float kd = ((p->m_Stats.m_Hits != 0) ? (float)((float)p->m_Stats.m_Kills / (float)p->m_Stats.m_Hits) : (float)p->m_Stats.m_Kills);
 		if (bestKD < kd) {
@@ -2240,7 +2240,7 @@ void CGameContext::SendRoundStats() {
 	if (bestKDCount > 0) {
 		char buff[300];
 		if(bestKDCount == 1){
-			str_format(buff, 300, "Best player: '%s' with a K/D of %.3f", Server()->ClientName(bestKDPlayerIDs.PositionOfNonZeroBit(0)), bestKD);
+			str_format(buff, 300, "Лучший игрок: %s: K/D — %.3f", Server()->ClientName(bestKDPlayerIDs.PositionOfNonZeroBit(0)), bestKD);
 		} else {
 			//only allow upto 10 players at once(else we risk buffer overflow)
 			int curPlayerCount = 0;
@@ -2263,7 +2263,7 @@ void CGameContext::SendRoundStats() {
 			
 			if(curPlayerCount > 10) str_format((PlayerNames + CharacterOffset), 300 - CharacterOffset, " and others");
 			
-			str_format(buff, 300, "Best players: %s with a K/D of %.3f", PlayerNames, bestKD);
+			str_format(buff, 300, "Лучший игрок: %s: K/D — %.3f", PlayerNames, bestKD);
 		}
 		SendChat(-1, CGameContext::CHAT_ALL, buff);
 	}
@@ -2272,7 +2272,7 @@ void CGameContext::SendRoundStats() {
 	if (bestAccuracyCount > 0) {
 		char buff[300];
 		if (bestAccuracyCount == 1) {
-			str_format(buff, 300, "Best accuracy: '%s' with %3.1f%%", Server()->ClientName(bestAccuarcyPlayerIDs.PositionOfNonZeroBit(0)), bestAccuracy * 100.f);
+			str_format(buff, 300, "Наилучшая точность: %s — %3.1f%%", Server()->ClientName(bestAccuarcyPlayerIDs.PositionOfNonZeroBit(0)), bestAccuracy * 100.f);
 		}
 		else {
 			//only allow upto 10 players at once(else we risk buffer overflow)
@@ -2296,7 +2296,7 @@ void CGameContext::SendRoundStats() {
 
 			if (curPlayerCount > 10) str_format((PlayerNames + CharacterOffset), 300 - CharacterOffset, " and others");
 
-			str_format(buff, 300, "Best accuracy: %s with %3.1f%%", PlayerNames, bestAccuracy * 100.f);
+			str_format(buff, 300, "Наилучшая точность: %s — %3.1f%%", PlayerNames, bestAccuracy * 100.f);
 		}
 		SendChat(-1, CGameContext::CHAT_ALL, buff);
 	}
@@ -2326,7 +2326,7 @@ void CGameContext::SendRandomTrivia(){
 		
 		if(PlayerID != -1){
 			char buff[300];
-			str_format(buff, sizeof(buff), "Trivia: '%s' jumped %d time%s in this round.", Server()->ClientName(PlayerID), MaxJumps, (MaxJumps == 1 ? "" : "s"));
+			str_format(buff, sizeof(buff), "Случайный факт: '%s' прыгнул %d раз в этом матче.", Server()->ClientName(PlayerID), MaxJumps);
 			SendChat(-1, CGameContext::CHAT_ALL, buff);
 			TriviaSent = true;
 		}
@@ -2347,7 +2347,7 @@ void CGameContext::SendRandomTrivia(){
 		
 		if(PlayerID != -1){
 			char buff[300];
-			str_format(buff, sizeof(buff), "Trivia: '%s' moved %5.2f tiles in this round.", Server()->ClientName(PlayerID), MaxTilesMoved/32.f);
+			str_format(buff, sizeof(buff), "Случайный факт: '%s' переместился на %5.2f тайлов в этом матче.", Server()->ClientName(PlayerID), MaxTilesMoved/32.f);
 			SendChat(-1, CGameContext::CHAT_ALL, buff);
 			TriviaSent = true;
 		}
@@ -2368,7 +2368,7 @@ void CGameContext::SendRandomTrivia(){
 		
 		if(PlayerID != -1){
 			char buff[300];
-			str_format(buff, sizeof(buff), "Trivia: '%s' hooked %d time%s in this round.", Server()->ClientName(PlayerID), MaxHooks, (MaxHooks == 1 ? "" : "s"));
+			str_format(buff, sizeof(buff), "Случайный факт: '%s' хукнул %d раз в этом матче.", Server()->ClientName(PlayerID), MaxHooks);
 			SendChat(-1, CGameContext::CHAT_ALL, buff);
 			TriviaSent = true;
 		}
@@ -2389,7 +2389,7 @@ void CGameContext::SendRandomTrivia(){
 		
 		if(PlayerID != -1){
 			char buff[300];
-			str_format(buff, sizeof(buff), "Trivia: '%s' was the fastest player with %4.2f tiles per second(no fallspeed).", Server()->ClientName(PlayerID), (MaxSpeed*(float)Server()->TickSpeed())/32.f);
+			str_format(buff, sizeof(buff), "Случайный факт: '%s' был самым быстрым со скоростью %4.2f тайлов в секунду.", Server()->ClientName(PlayerID), (MaxSpeed*(float)Server()->TickSpeed())/32.f);
 			SendChat(-1, CGameContext::CHAT_ALL, buff);
 			TriviaSent = true;
 		}
@@ -2410,7 +2410,7 @@ void CGameContext::SendRandomTrivia(){
 		
 		if(PlayerID != -1){
 			char buff[300];
-			str_format(buff, sizeof(buff), "Trivia: '%s' bounced %d time%s from other players.", Server()->ClientName(PlayerID), MaxTeeCols, (MaxTeeCols == 1 ? "" : "s"));
+			str_format(buff, sizeof(buff), "Случайный факт: '%s' отскочил %d раз от других игроков.", Server()->ClientName(PlayerID), MaxTeeCols);
 			SendChat(-1, CGameContext::CHAT_ALL, buff);
 			TriviaSent = true;
 		}
@@ -2431,7 +2431,7 @@ void CGameContext::SendRandomTrivia(){
 		
 		if(PlayerID != -1){
 			char buff[300];
-			str_format(buff, sizeof(buff), "Trivia: '%s' was frozen for %4.2f seconds total this round.", Server()->ClientName(PlayerID), (float)MaxFreezeTicks/(float)Server()->TickSpeed());
+			str_format(buff, sizeof(buff), "Случайный факт: '%s' был заморожен в течение %4.2f секунд за этот матч.", Server()->ClientName(PlayerID), (float)MaxFreezeTicks/(float)Server()->TickSpeed());
 			SendChat(-1, CGameContext::CHAT_ALL, buff);
 			TriviaSent = true;
 		}
@@ -2452,7 +2452,7 @@ void CGameContext::SendRandomTrivia(){
 		
 		if(PlayerID != -1){
 			char buff[300];
-			str_format(buff, sizeof(buff), "Trivia: '%s' hammered %d frozen teammate%s.", Server()->ClientName(PlayerID), MaxUnfreezeHammers, (MaxUnfreezeHammers == 1 ? "" : "s"));
+			str_format(buff, sizeof(buff), "Случайный факт: '%s' ударил %d раз замороженного тиммейта.", Server()->ClientName(PlayerID), MaxUnfreezeHammers, (MaxUnfreezeHammers == 1 ? "" : "s"));
 			SendChat(-1, CGameContext::CHAT_ALL, buff);
 			TriviaSent = true;
 		}
@@ -2473,7 +2473,7 @@ void CGameContext::SendRandomTrivia(){
 		
 		if(PlayerID != -1){
 			char buff[300];
-			str_format(buff, sizeof(buff), "Trivia: '%s' emoted %d time%s.", Server()->ClientName(PlayerID), MaxEmotes, (MaxEmotes == 1 ? "" : "s"));
+			str_format(buff, sizeof(buff), "Случайный факт: '%s' emoted %d time%s.", Server()->ClientName(PlayerID), MaxEmotes, (MaxEmotes == 1 ? "" : "s"));
 			SendChat(-1, CGameContext::CHAT_ALL, buff);
 			TriviaSent = true;
 		}
@@ -2494,7 +2494,7 @@ void CGameContext::SendRandomTrivia(){
 		
 		if(PlayerID != -1){
 			char buff[300];
-			str_format(buff, sizeof(buff), "Trivia: '%s' was hitted %d time%s by the opponent's weapon.", Server()->ClientName(PlayerID), MaxHit, (MaxHit == 1 ? "" : "s"));
+			str_format(buff, sizeof(buff), "Случайный факт: '%s' был заморожен оружием противника %d раз.", Server()->ClientName(PlayerID), MaxHit, (MaxHit == 1 ? "" : "s"));
 			SendChat(-1, CGameContext::CHAT_ALL, buff);
 			TriviaSent = true;
 		}
@@ -2515,7 +2515,7 @@ void CGameContext::SendRandomTrivia(){
 		
 		if(PlayerID != -1){
 			char buff[300];
-			str_format(buff, sizeof(buff), "Trivia: '%s' was thrown %d time%s into spikes by the opponents, while being frozen.", Server()->ClientName(PlayerID), MaxDeaths, (MaxDeaths == 1 ? "" : "s"));
+			str_format(buff, sizeof(buff), "Случайный факт: '%s' был брошен противником в шипы %d раз (В заморозке).", Server()->ClientName(PlayerID), MaxDeaths, (MaxDeaths == 1 ? "" : "s"));
 			SendChat(-1, CGameContext::CHAT_ALL, buff);
 			TriviaSent = true;
 		}
@@ -2536,7 +2536,7 @@ void CGameContext::SendRandomTrivia(){
 		
 		if(PlayerID != -1){
 			char buff[300];
-			str_format(buff, sizeof(buff), "Trivia: '%s' threw %d time%s frozen opponents into golden spikes.", Server()->ClientName(PlayerID), MaxGold, (MaxGold == 1 ? "" : "s"));
+			str_format(buff, sizeof(buff), "Случайный факт: '%s' убил %d раз противника в золотые шипы.", Server()->ClientName(PlayerID), MaxGold, (MaxGold == 1 ? "" : "s"));
 			SendChat(-1, CGameContext::CHAT_ALL, buff);
 			TriviaSent = true;
 		} else {
@@ -2547,7 +2547,7 @@ void CGameContext::SendRandomTrivia(){
 	}
 	
 	if(!TriviaSent){
-		SendChat(-1, CGameContext::CHAT_ALL, "Trivia: Press F1 and use PageUp and PageDown to scroll in the console window");
+		SendChat(-1, CGameContext::CHAT_ALL, "Случайный факт: Нажмите F1 и используйте PageUp и PageDown для прокрутки в окне консоли");
 	}
 }
 
